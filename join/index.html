@@ -5,8 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Unirse a grupo en Cuent-Ar</title>
   <meta name="theme-color" content="#0f172a">
-  <meta property="og:title" content="Invitación a Grupo en Cuent-Ar">
-  <meta property="og:description" content="Tocá para sumarte al grupo y llevar los gastos compartidos fácilmente.">
+  <meta property="og:title" content="Invitación Segura a Grupo en Cuent-Ar">
+  <meta property="og:description" content="Tocá para sumarte al grupo cifrado y llevar los gastos compartidos fácilmente.">
   <style>
     * { box-sizing: border-box; }
     body {
@@ -75,14 +75,14 @@
 </head>
 <body>
   <div class="card">
-    <div class="badge">👥 INVITACIÓN A GRUPO</div>
+    <div class="badge">👥 INVITACIÓN SEGURA A GRUPO</div>
     <h1>¡Sumate al grupo en Cuent-Ar!</h1>
     <p>Redirigiendo automáticamente a la aplicación...</p>
 
     <div id="codeDisplay" class="code-box">------</div>
 
     <button id="openBtn" class="btn">Abrir en Cuent-Ar</button>
-    <p class="footer-note">¿No abrió automáticamente? Abrí la app <strong>Cuent-Ar</strong>, tocá en <strong>Unirse</strong> y pegá este código.</p>
+    <p class="footer-note">¿No abrió automáticamente? Abrí la app <strong>Cuent-Ar</strong>, tocá en <strong>Unirse > Pegar Enlace</strong> y pegá el mensaje recibido.</p>
   </div>
 
   <script>
@@ -90,11 +90,9 @@
     const code = (params.get('code') || params.get('c') || '').toUpperCase();
     const key = params.get('key') || params.get('k') || '';
 
-    if (code) {
+    if (code && key) {
       document.getElementById('codeDisplay').textContent = code;
-      const deepLink = key 
-        ? `cuentar://join?code=${encodeURIComponent(code)}&key=${encodeURIComponent(key)}`
-        : `cuentar://join?code=${encodeURIComponent(code)}`;
+      const deepLink = `cuentar://join?code=${encodeURIComponent(code)}&key=${encodeURIComponent(key)}`;
 
       document.getElementById('openBtn').onclick = function() {
         window.location.href = deepLink;
@@ -104,9 +102,15 @@
       setTimeout(function() {
         window.location.href = deepLink;
       }, 150);
+    } else if (code && !key) {
+      document.getElementById('codeDisplay').textContent = code;
+      document.querySelector('p').innerHTML = '<span style="color: #f87171; font-weight: bold;">⚠️ Enlace incompleto sin clave de cifrado</span><br><br>Para proteger tu privacidad, este grupo cuenta con cifrado de extremo a extremo. Solicitale a un integrante que te comparta el enlace completo de invitación.';
+      document.getElementById('openBtn').style.display = 'none';
+      document.querySelector('.footer-note').textContent = 'El enlace requiere la clave secreta del grupo para poder descifrar los gastos.';
     } else {
-      document.getElementById('codeDisplay').textContent = 'INVALID';
-      document.querySelector('p').textContent = 'El enlace no contiene un código de grupo válido.';
+      document.getElementById('codeDisplay').textContent = 'INVÁLIDO';
+      document.querySelector('p').textContent = 'El enlace no contiene una invitación válida.';
+      document.getElementById('openBtn').style.display = 'none';
     }
   </script>
 </body>
