@@ -15,7 +15,6 @@ Sitio web estático oficial y portal de enlaces universales de la aplicación m�
 * **`join.html` / `join/index.html`:** Receptor universal de invitaciones. Si se abre desde un navegador (PC o celular sin la app), muestra el código del grupo y redirige automáticamente al esquema nativo `cuentar://join`.
 * **`.well-known/assetlinks.json`:** Archivo de verificación de **Android App Links**. Contiene las huellas digitales públicas SHA-256 de los certificados de firma (Release y Debug) para que Android abra la app directamente desde cualquier enlace compartido sin pasar por el navegador.
 * **`.nojekyll`:** Archivo indicador para GitHub Pages, necesario para que el servidor de GitHub no ignore los directorios ocultos que comienzan con un punto (`.well-known`).
-* **`vercel.json`:** Configuración de compatibilidad en caso de querer desplegar también en Vercel con cabeceras JSON automáticas.
 
 ---
 
