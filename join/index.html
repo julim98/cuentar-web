@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Unirse a grupo en Cuent-Ar</title>
+  <meta name="theme-color" content="#0f172a">
+  <meta property="og:title" content="Invitación a Grupo en Cuent-Ar">
+  <meta property="og:description" content="Tocá para sumarte al grupo y llevar los gastos compartidos fácilmente.">
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: #0f172a;
+      color: #f8fafc;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      padding: 20px;
+      text-align: center;
+    }
+    .card {
+      background: #1e293b;
+      border-radius: 24px;
+      padding: 36px 24px;
+      max-width: 420px;
+      width: 100%;
+      box-shadow: 0 12px 30px rgba(0,0,0,0.35);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+    .badge {
+      display: inline-block;
+      background: rgba(34, 197, 94, 0.15);
+      color: #4ade80;
+      font-weight: 700;
+      font-size: 13px;
+      padding: 6px 14px;
+      border-radius: 9999px;
+      margin-bottom: 16px;
+      letter-spacing: 0.5px;
+    }
+    .code-box {
+      background: #0f172a;
+      border: 1px dashed #38bdf8;
+      border-radius: 12px;
+      padding: 14px;
+      font-size: 26px;
+      font-weight: 800;
+      letter-spacing: 4px;
+      color: #38bdf8;
+      margin: 16px 0;
+      user-select: all;
+    }
+    h1 { font-size: 22px; margin: 0 0 10px 0; }
+    p { color: #94a3b8; font-size: 14px; line-height: 1.5; margin: 0 0 20px 0; }
+    .btn {
+      display: block;
+      background: #2563eb;
+      color: #ffffff;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 15px;
+      padding: 14px 20px;
+      border-radius: 12px;
+      margin-bottom: 12px;
+      cursor: pointer;
+      border: none;
+      width: 100%;
+    }
+    .btn:hover { background: #1d4ed8; }
+    .footer-note { font-size: 12px; color: #64748b; margin-top: 16px; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <div class="badge">👥 INVITACIÓN A GRUPO</div>
+    <h1>¡Sumate al grupo en Cuent-Ar!</h1>
+    <p>Redirigiendo automáticamente a la aplicación...</p>
+
+    <div id="codeDisplay" class="code-box">------</div>
+
+    <button id="openBtn" class="btn">Abrir en Cuent-Ar</button>
+    <p class="footer-note">¿No abrió automáticamente? Abrí la app <strong>Cuent-Ar</strong>, tocá en <strong>Unirse</strong> y pegá este código.</p>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const code = (params.get('code') || params.get('c') || '').toUpperCase();
+    const key = params.get('key') || params.get('k') || '';
+
+    if (code) {
+      document.getElementById('codeDisplay').textContent = code;
+      const deepLink = key 
+        ? `cuentar://join?code=${encodeURIComponent(code)}&key=${encodeURIComponent(key)}`
+        : `cuentar://join?code=${encodeURIComponent(code)}`;
+
+      document.getElementById('openBtn').onclick = function() {
+        window.location.href = deepLink;
+      };
+
+      // Intento de redirección automática al cargar
+      setTimeout(function() {
+        window.location.href = deepLink;
+      }, 150);
+    } else {
+      document.getElementById('codeDisplay').textContent = 'INVALID';
+      document.querySelector('p').textContent = 'El enlace no contiene un código de grupo válido.';
+    }
+  </script>
+</body>
+</html>

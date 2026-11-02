@@ -1,0 +1,13 @@
+[
+  {
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.cuentar.cuentar",
+      "sha256_cert_fingerprints": [
+        "51:20:1D:E2:7E:6C:9F:B5:CA:DB:D7:FE:C7:6C:2E:9F:7D:26:CC:D7:3C:0F:8F:35:EA:1F:15:8B:D6:C0:61:AC",
+        "AC:8B:9A:8F:F5:18:8A:6E:6D:6F:E2:4B:E2:1D:40:22:8A:01:3F:CB:27:68:A7:A0:D1:6F:32:9C:A3:CA:A9:75"
+      ]
+    }
+  }
+]
