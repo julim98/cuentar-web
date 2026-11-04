@@ -6,7 +6,7 @@
   <title>Unirse a grupo en Cuent-Ar</title>
   <meta name="theme-color" content="#0f172a">
   <meta property="og:title" content="Invitación Segura a Grupo en Cuent-Ar">
-  <meta property="og:description" content="Tocá para sumarte al grupo cifrado y llevar los gastos compartidos fácilmente.">
+  <meta property="og:description" content="Súmate al grupo con cifrado de extremo a extremo para gestionar finanzas y gastos compartidos.">
   <style>
     * { box-sizing: border-box; }
     body {
@@ -25,7 +25,7 @@
       background: #1e293b;
       border-radius: 24px;
       padding: 36px 24px;
-      max-width: 420px;
+      max-width: 440px;
       width: 100%;
       box-shadow: 0 12px 30px rgba(0,0,0,0.35);
       border: 1px solid rgba(255,255,255,0.08);
@@ -57,7 +57,6 @@
     p { color: #94a3b8; font-size: 14px; line-height: 1.5; margin: 0 0 20px 0; }
     .btn {
       display: block;
-      background: #2563eb;
       color: #ffffff;
       text-decoration: none;
       font-weight: 600;
@@ -68,49 +67,91 @@
       cursor: pointer;
       border: none;
       width: 100%;
+      transition: background 0.2s ease;
     }
-    .btn:hover { background: #1d4ed8; }
-    .footer-note { font-size: 12px; color: #64748b; margin-top: 16px; }
+    .btn-primary {
+      background: #00A86B;
+    }
+    .btn-primary:hover {
+      background: #008f5a;
+    }
+    .btn-secondary {
+      background: #2563eb;
+    }
+    .btn-secondary:hover {
+      background: #1d4ed8;
+    }
+    .btn-outline {
+      background: transparent;
+      border: 1px solid rgba(255,255,255,0.2);
+      color: #cbd5e1;
+    }
+    .btn-outline:hover {
+      background: rgba(255,255,255,0.05);
+    }
+    .footer-note { font-size: 12px; color: #64748b; margin-top: 16px; line-height: 1.4; }
   </style>
 </head>
 <body>
   <div class="card">
     <div class="badge">👥 INVITACIÓN SEGURA A GRUPO</div>
-    <h1>¡Sumate al grupo en Cuent-Ar!</h1>
-    <p>Redirigiendo automáticamente a la aplicación...</p>
+    <h1>¡Súmate al grupo en Cuent-Ar!</h1>
+    <p id="statusMsg">Elige cómo deseas acceder al grupo compartido:</p>
 
     <div id="codeDisplay" class="code-box">------</div>
 
-    <button id="openBtn" class="btn">Abrir en Cuent-Ar</button>
-    <p class="footer-note">¿No abrió automáticamente? Abrí la app <strong>Cuent-Ar</strong>, tocá en <strong>Unirse > Pegar Enlace</strong> y pegá el mensaje recibido.</p>
+    <div id="actionButtons">
+      <button id="openNativeBtn" class="btn btn-primary">Abrir en App Cuent-Ar</button>
+      <button id="openWebBtn" class="btn btn-secondary">Abrir en Cuent-Ar Web</button>
+      <a id="playStoreBtn" href="https://play.google.com/store/apps/details?id=com.cuentar.cuentar" class="btn btn-outline" target="_blank" rel="noopener">Descargar en Google Play</a>
+    </div>
+
+    <p class="footer-note">Los grupos en Cuent-Ar cuentan con cifrado de extremo a extremo (E2EE) para máxima privacidad de tus finanzas.</p>
   </div>
 
   <script>
     const params = new URLSearchParams(window.location.search);
     const code = (params.get('code') || params.get('c') || '').toUpperCase();
-    const key = params.get('key') || params.get('k') || '';
+    
+    // Extracción de clave desde query params o desde hash fragment (#key=...)
+    let key = params.get('key') || params.get('k') || '';
+    if (!key && window.location.hash) {
+      const hashStr = window.location.hash.substring(1);
+      const hashParams = new URLSearchParams(hashStr);
+      key = hashParams.get('key') || hashParams.get('k') || hashStr;
+      if (key.startsWith('key=')) key = key.substring(4);
+      if (key.startsWith('k=')) key = key.substring(2);
+    }
 
     if (code && key) {
       document.getElementById('codeDisplay').textContent = code;
-      const deepLink = `cuentar://join?code=${encodeURIComponent(code)}&key=${encodeURIComponent(key)}`;
+      
+      const nativeDeepLink = `cuentar://join?code=${encodeURIComponent(code)}&key=${encodeURIComponent(key)}`;
+      const webUrl = `https://cuent-ar.web.app/join?code=${encodeURIComponent(code)}#key=${encodeURIComponent(key)}`;
 
-      document.getElementById('openBtn').onclick = function() {
-        window.location.href = deepLink;
+      document.getElementById('openNativeBtn').onclick = function() {
+        window.location.href = nativeDeepLink;
       };
 
-      // Intento de redirección automática al cargar
-      setTimeout(function() {
-        window.location.href = deepLink;
-      }, 150);
+      document.getElementById('openWebBtn').onclick = function() {
+        window.location.href = webUrl;
+      };
+
+      // Si el usuario está en Android, intentar abrir la app automáticamente
+      const isAndroid = /android/i.test(navigator.userAgent);
+      if (isAndroid) {
+        setTimeout(function() {
+          window.location.href = nativeDeepLink;
+        }, 200);
+      }
     } else if (code && !key) {
       document.getElementById('codeDisplay').textContent = code;
-      document.querySelector('p').innerHTML = '<span style="color: #f87171; font-weight: bold;">⚠️ Enlace incompleto sin clave de cifrado</span><br><br>Para proteger tu privacidad, este grupo cuenta con cifrado de extremo a extremo. Solicitale a un integrante que te comparta el enlace completo de invitación.';
-      document.getElementById('openBtn').style.display = 'none';
-      document.querySelector('.footer-note').textContent = 'El enlace requiere la clave secreta del grupo para poder descifrar los gastos.';
+      document.getElementById('statusMsg').innerHTML = '<span style="color: #f87171; font-weight: bold;">⚠️ Enlace incompleto sin clave de cifrado</span><br><br>Para proteger tu privacidad, este grupo cuenta con cifrado de extremo a extremo. Solicítale a quien te invitó que te reenvíe el enlace completo.';
+      document.getElementById('actionButtons').style.display = 'none';
     } else {
       document.getElementById('codeDisplay').textContent = 'INVÁLIDO';
-      document.querySelector('p').textContent = 'El enlace no contiene una invitación válida.';
-      document.getElementById('openBtn').style.display = 'none';
+      document.getElementById('statusMsg').textContent = 'El enlace no contiene un código de invitación válido.';
+      document.getElementById('actionButtons').style.display = 'none';
     }
   </script>
 </body>
